@@ -1,3 +1,11 @@
+import clear from "/images/clear.svg";
+import cloudy from "/images/cloudy.svg";
+import fog from "/images/fog.svg";
+import hail from "/images/hail.svg";
+import humidity from "/images/humidity.svg";
+import mist from "/images/mist.svg";
+import wind from "/images/wind.svg";
+
 async function getWeatherData(city) {
   try {
     const response = await fetch(
@@ -18,7 +26,7 @@ async function getWeatherData(city) {
 async function filteredData(city) {
   try {
     const unfilteredData = await getWeatherData(city);
-
+    console.log(unfilteredData);
     const { resolvedAddress, days } = unfilteredData;
 
     return { resolvedAddress, days };
@@ -35,15 +43,37 @@ async function displayWeather(city) {
   const condition = document.querySelector("#condition");
   const conditionIcon = document.querySelector("#condition-icon");
   const temperature = document.querySelector("#temperature");
-  const subContainer = document.querySelector("#sub-container");
-  const moistureIcon = document.querySelector("#moisture-icon");
-  const moisture = document.querySelector("#moisture");
+  const humidityIcon = document.querySelector("#humidity-icon");
+  const humidityVal = document.querySelector("#humidity");
   const windIcon = document.querySelector("#wind-icon");
-  const wind = document.querySelector("#wind");
+  const windVal = document.querySelector("#wind");
 
-  
+  address.textContent = data.resolvedAddress;
+  condition.textContent = today.conditions;
+  conditionIcon.src = getIcon(today.conditions);
+  temperature.textContent = `${today.temp} °F`;
+  humidityIcon.src = humidity;
+  humidityVal.textContent = `${today.humidity}%`;
+  windIcon.src = wind;
+  windVal.textContent = `${today.windspeed} km/hr`;
 }
 
-const getWeatherBtn = document.querySelector("#get-weather");
+function getIcon(condition) {
+
+  const iconMap = {
+    "Clear": clear,
+    "Sunny": clear,
+    "Cloudy": cloudy,
+    "Partially cloudy": cloudy,
+    "Snow, Overcast": cloudy,
+    "Overcast": cloudy,
+    "Fog": fog,
+    "Mist": mist,
+    "Hail": hail,
+  };
+
+  return iconMap[condition] || clear;
+}
+/* const getWeatherBtn = document.querySelector("#get-weather"); */
 
 displayWeather("london");
