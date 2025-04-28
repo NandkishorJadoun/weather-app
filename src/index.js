@@ -36,44 +36,66 @@ async function filteredData(city) {
 }
 
 async function displayWeather(city) {
-  const data = await filteredData(city);
-  const today = data.days[0];
+  try {
+    const data = await filteredData(city);
+    const today = data.days[0];
 
-  const address = document.querySelector("#address");
-  const condition = document.querySelector("#condition");
-  const conditionIcon = document.querySelector("#condition-icon");
-  const temperature = document.querySelector("#temperature");
-  const humidityIcon = document.querySelector("#humidity-icon");
-  const humidityVal = document.querySelector("#humidity");
-  const windIcon = document.querySelector("#wind-icon");
-  const windVal = document.querySelector("#wind");
+    const errMsg = document.querySelector("#error-message");
 
-  address.textContent = data.resolvedAddress;
-  condition.textContent = today.conditions;
-  conditionIcon.src = getIcon(today.conditions);
-  temperature.textContent = `${today.temp} °F`;
-  humidityIcon.src = humidity;
-  humidityVal.textContent = `${today.humidity}%`;
-  windIcon.src = wind;
-  windVal.textContent = `${today.windspeed} km/hr`;
+    const address = document.querySelector("#address");
+    const condition = document.querySelector("#condition");
+    const conditionIcon = document.querySelector("#condition-icon");
+    const temperature = document.querySelector("#temperature");
+    const humidityIcon = document.querySelector("#humidity-icon");
+    const humidityVal = document.querySelector("#humidity");
+    const windIcon = document.querySelector("#wind-icon");
+    const windVal = document.querySelector("#wind");
+
+    errMsg.textContent = "";
+    address.textContent = data.resolvedAddress;
+    condition.textContent = today.conditions;
+    conditionIcon.src = getIcon(today.conditions);
+    temperature.textContent = `${today.temp} °F`;
+    humidityIcon.src = humidity;
+    humidityVal.textContent = `${today.humidity}%`;
+    windIcon.src = wind;
+    windVal.textContent = `${today.windspeed} km/hr`;
+  } catch (error) {
+
+    console.log("Display Error:", error);
+    const errMsg = document.querySelector("#error-message");
+    errMsg.textContent = `Can't`;
+    
+  }
 }
 
 function getIcon(condition) {
-
   const iconMap = {
-    "Clear": clear,
-    "Sunny": clear,
-    "Cloudy": cloudy,
+    Clear: clear,
+    Sunny: clear,
+    Cloudy: cloudy,
     "Partially cloudy": cloudy,
     "Snow, Overcast": cloudy,
-    "Overcast": cloudy,
-    "Fog": fog,
-    "Mist": mist,
-    "Hail": hail,
+    Overcast: cloudy,
+    Fog: fog,
+    Mist: mist,
+    Hail: hail,
   };
 
   return iconMap[condition] || clear;
 }
-/* const getWeatherBtn = document.querySelector("#get-weather"); */
 
-displayWeather("london");
+function inputCity() {
+  const cityName = document.querySelector("#city-name");
+  const getWeatherBtn = document.querySelector("#get-weather");
+
+  getWeatherBtn.addEventListener("click", async (e) => {
+    e.preventDefault();
+    if (!cityName.value) {
+      return;
+    }
+    await displayWeather(cityName.value);
+  });
+}
+
+inputCity();
