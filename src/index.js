@@ -5,6 +5,7 @@ import hail from "/images/hail.svg";
 import humidity from "/images/humidity.svg";
 import mist from "/images/mist.svg";
 import wind from "/images/wind.svg";
+import loading from "/images/loading.svg"
 
 import "./styles.css";
 
@@ -38,6 +39,11 @@ async function filteredData(city) {
 }
 
 async function displayWeather(city) {
+
+  const loadingScreen = document.querySelector("#loading-screen")
+  loadingScreen.style.display = "block";
+  loadingScreen.src = loading;
+
   try {
     const data = await filteredData(city);
     const today = data.days[0];
@@ -55,11 +61,12 @@ async function displayWeather(city) {
     const windVal = document.querySelector("#wind");
 
     errMsg.textContent = "";
+    errMsg.style.display = "none"
     dataContainer.style.display = "block";
     address.textContent = data.resolvedAddress;
     condition.textContent = today.conditions;
     conditionIcon.src = getIcon(today.conditions);
-    temperature.textContent = `${today.temp} °F`;
+    temperature.textContent = `${convertToCelcius(today.temp)} °C`;
     humidityIcon.src = humidity;
     humidityVal.textContent = `${today.humidity}%`;
     windIcon.src = wind;
@@ -71,7 +78,13 @@ async function displayWeather(city) {
     errMsg.textContent = `Can't find weather for ${city}`;
     const dataContainer = document.querySelector("#data-container");
     dataContainer.style.display = "none";
+  } finally {
+    loadingScreen.style.display = "none";
   }
+}
+
+function convertToCelcius(temp){
+  return Math.floor(((temp - 32) * 5) / 9);
 }
 
 function getIcon(condition) {
