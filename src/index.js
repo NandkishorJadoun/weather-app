@@ -6,6 +6,8 @@ import humidity from "/images/humidity.svg";
 import mist from "/images/mist.svg";
 import wind from "/images/wind.svg";
 
+import "./styles.css";
+
 async function getWeatherData(city) {
   try {
     const response = await fetch(
@@ -42,6 +44,7 @@ async function displayWeather(city) {
 
     const errMsg = document.querySelector("#error-message");
 
+    const dataContainer = document.querySelector("#data-container");
     const address = document.querySelector("#address");
     const condition = document.querySelector("#condition");
     const conditionIcon = document.querySelector("#condition-icon");
@@ -52,6 +55,7 @@ async function displayWeather(city) {
     const windVal = document.querySelector("#wind");
 
     errMsg.textContent = "";
+    dataContainer.style.display = "block";
     address.textContent = data.resolvedAddress;
     condition.textContent = today.conditions;
     conditionIcon.src = getIcon(today.conditions);
@@ -61,11 +65,12 @@ async function displayWeather(city) {
     windIcon.src = wind;
     windVal.textContent = `${today.windspeed} km/hr`;
   } catch (error) {
-
     console.log("Display Error:", error);
     const errMsg = document.querySelector("#error-message");
-    errMsg.textContent = `Can't`;
-    
+    errMsg.style.display = "block";
+    errMsg.textContent = `Can't find weather for ${city}`;
+    const dataContainer = document.querySelector("#data-container");
+    dataContainer.style.display = "none";
   }
 }
 
