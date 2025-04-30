@@ -15,6 +15,11 @@ body{
     color: white;
 }
 
+#loading-screen{
+    width: 120px;
+    margin-bottom: 30px;
+}
+
 #error-message{
     display: none;
     text-align: center;
