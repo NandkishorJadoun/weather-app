@@ -5,7 +5,7 @@ import hail from "/images/hail.svg";
 import humidity from "/images/humidity.svg";
 import mist from "/images/mist.svg";
 import wind from "/images/wind.svg";
-import loading from "/images/loading.svg"
+import loading from "/images/loading.svg";
 
 import "./styles.css";
 
@@ -39,29 +39,30 @@ async function filteredData(city) {
 }
 
 async function displayWeather(city) {
+  const loadingScreen = document.querySelector("#loading-screen");
+  const errMsg = document.querySelector("#error-message");
+  const dataContainer = document.querySelector("#data-container");
+  const address = document.querySelector("#address");
+  const condition = document.querySelector("#condition");
+  const conditionIcon = document.querySelector("#condition-icon");
+  const temperature = document.querySelector("#temperature");
+  const humidityIcon = document.querySelector("#humidity-icon");
+  const humidityVal = document.querySelector("#humidity");
+  const windIcon = document.querySelector("#wind-icon");
+  const windVal = document.querySelector("#wind");
 
-  const loadingScreen = document.querySelector("#loading-screen")
   loadingScreen.style.display = "block";
   loadingScreen.src = loading;
+
+  errMsg.style.display = "none";
+  dataContainer.style.display = "none";
 
   try {
     const data = await filteredData(city);
     const today = data.days[0];
 
-    const errMsg = document.querySelector("#error-message");
-
-    const dataContainer = document.querySelector("#data-container");
-    const address = document.querySelector("#address");
-    const condition = document.querySelector("#condition");
-    const conditionIcon = document.querySelector("#condition-icon");
-    const temperature = document.querySelector("#temperature");
-    const humidityIcon = document.querySelector("#humidity-icon");
-    const humidityVal = document.querySelector("#humidity");
-    const windIcon = document.querySelector("#wind-icon");
-    const windVal = document.querySelector("#wind");
-
     errMsg.textContent = "";
-    errMsg.style.display = "none"
+    errMsg.style.display = "none";
     dataContainer.style.display = "block";
     address.textContent = data.resolvedAddress;
     condition.textContent = today.conditions;
@@ -72,18 +73,18 @@ async function displayWeather(city) {
     windIcon.src = wind;
     windVal.textContent = `${today.windspeed} km/hr`;
   } catch (error) {
+
     console.log("Display Error:", error);
-    const errMsg = document.querySelector("#error-message");
     errMsg.style.display = "block";
     errMsg.textContent = `Can't find weather for ${city}`;
-    const dataContainer = document.querySelector("#data-container");
     dataContainer.style.display = "none";
+    
   } finally {
     loadingScreen.style.display = "none";
   }
 }
 
-function convertToCelcius(temp){
+function convertToCelcius(temp) {
   return Math.floor(((temp - 32) * 5) / 9);
 }
 
